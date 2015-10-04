@@ -14,14 +14,14 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "backbone": "1.1.2",
-    "body-parser": "~1.0.0",
-    "cors": "2.5.2",
-    "express": "4.10.2",
-    "gridfs-stream": "1.1.1",
-    "mongodb": "^3.0.0",
-    "mongoose": "^4.0.0",
-    "underscore": "1.7.0"
+    "backbone": "^1.2.3",
+    "body-parser": "^1.14.1",
+    "cors": "^2.7.1",
+    "express": "*",
+    "gridfs-stream": "*",
+    "mongodb": "^2.0.45",
+    "mongoose": "^4.1.9",
+    "underscore": "^1.8.3"
   },
   "changelog": [
     {
