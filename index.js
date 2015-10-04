@@ -88,8 +88,8 @@ var gameSchema = new mongoose.Schema({
 }, { versionKey: false });
 
 
-var Users = mongoose.model('twcUsers', userSchema);
-var Games = mongoose.model('twcGames', boxSchema);
+var Users = mongoose.model('pttUsers', userSchema);
+var Games = mongoose.model('pttGames', gameSchema);
 
 // In case the browser connects before the database is connected, the
 // user will see this message.
