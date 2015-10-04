@@ -168,6 +168,9 @@ router.route('/users')
     })
 
     .get(function(req, res) {
+        res.json({test:'yep'});
+
+        /*
         Users.find(function(err, users) {
             if (err){
                 res.json({ error: err });
@@ -175,6 +178,7 @@ router.route('/users')
                 res.json(users);
             }
         });
+*/
     });
 
 router.route('/users/:user_id')
