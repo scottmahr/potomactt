@@ -235,7 +235,7 @@ router.route('/users/:user_id')
 // ----------------------------------------------------
 router.route('/games')
     .post(function(req, res) {
-        new DropIns(req.body).save(function(err,game) {
+        new Games(req.body).save(function(err,game) {
             if(err){
                 res.json({ error: err });;
             }else{
@@ -245,7 +245,7 @@ router.route('/games')
     })
 
     .get(function(req, res) {
-        DropIns.find(function(err, games) {
+        Games.find(function(err, games) {
             if (err){
                 res.json({ error: err });
             }else{
@@ -258,7 +258,7 @@ router.route('/games/:game_id')
 
     // get the review with that id
     .get(function(req, res) {
-        DropIns.findById(req.params.game_id, function(err, game) {
+        Games.findById(req.params.game_id, function(err, game) {
             if (err){
                 res.json({ error: err });
             }else{
@@ -268,7 +268,7 @@ router.route('/games/:game_id')
     })
     // update the game with this id
     .put(function(req, res) {
-        DropIns.findById(req.params.game_id, function(err, game) {
+        Games.findById(req.params.game_id, function(err, game) {
             if (err){
                 res.json({ error: err });
             }
@@ -285,11 +285,11 @@ router.route('/games/:game_id')
         //delete game
     .delete(function(req, res) {
         //first, get the game and see if it has any reviews
-        DropIns.findById(req.params.game_id, function(err, game) {
+        Games.findById(req.params.game_id, function(err, game) {
             if (err){
                 res.json({ error: 'error getting game: ' +err });
             }else{
-                DropIns.remove( {_id: game._id}, 
+                Games.remove( {_id: game._id}, 
                     function(err) {
                         if (err){
                             res.json({ error: 'error removing lift: ' +err });
