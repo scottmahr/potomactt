@@ -56,11 +56,25 @@ var validateEmail = function(email) {
 };
 
 
+var leagueSchema = new mongoose.Schema({
+    cDate: { type: Date, default: Date.now },   //date item was created
+    name: {type: String, lowercase: true, trim: true,required:true,unique:true},
+    type:  String,  //the type of league, right now, ping pong, frisbee                    
+    photoID: String,
+    email:{
+        type: String,
+        trim: true,
+        validate: [validateEmail, 'Please fill a valid email address'],
+        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
+    }, 
+    
+}, { versionKey: false });
 
-var userSchema = new mongoose.Schema({
+var teamSchema = new mongoose.Schema({
     cDate: { type: Date, default: Date.now },   //date item was created
     name: {type: String, lowercase: true, trim: true,required:true,unique:true},                    
     facebookID: String,
+    leagueID:  mongoose.Schema.Types.ObjectId,
     photoID: String,
     phoneNumber: String,
     email:{
@@ -74,25 +88,26 @@ var userSchema = new mongoose.Schema({
 
 var gameSchema = new mongoose.Schema({
     cDate: { type: Date, default: Date.now },   //date item was created
-    date:  { type: String},  //a string of the game date
+    datePlayed:  { type: String},  //a string of the game date
+    leagueID:  mongoose.Schema.Types.ObjectId,
     time: { type: String},  //what time the game is scheduled for
     player1: mongoose.Schema.Types.ObjectId, 
     player2: mongoose.Schema.Types.ObjectId,
     round: Number,  //round of games
     writeup: String,
-    scores: { type: mongoose.Schema.Types.Mixed , default: [] },  //scores [[0,1,1,2,2,2],[0,0,1,1,2,3]]
-    finalScore: { type: mongoose.Schema.Types.Mixed , default: [] }, //[15,10]
-    table: String, //table 1, table 2
+    scores: { type: mongoose.Schema.Types.Mixed , default: [] },  //scores [[0,1],[1,2],[2,2],[0,0],[1,1],[2,3]]
+    properties: { type: mongoose.Schema.Types.Mixed , default: {} }, //who served first, anything like that 
+    location: String, //table 1, table 2, field 3, field 4
 
     
 }, { versionKey: false });
 
-
-var Users = mongoose.model('pttUsers', userSchema);
+var Leagues = mongoose.model('pttLeagues', leagueSchema);
+var Teams = mongoose.model('pttTeams', teamSchema);
 var Games = mongoose.model('pttGames', gameSchema);
 
 // In case the browser connects before the database is connected, the
-// user will see this message.
+// team will see this message.
 var found = ['DB Connection not yet established.  Try again later.  Check the console output for error messages if this persists.'];
 
 var router = express.Router();
@@ -154,15 +169,15 @@ router.post('/loadImage', function(req, res) {
 });
 
 
-// on routes that end in /users
+// on routes that end in /teams
 // ----------------------------------------------------
-router.route('/users')
+router.route('/teams')
     .post(function(req, res) {
-        new Users(req.body).save(function(err,user) {
+        new Teams(req.body).save(function(err,team) {
             if(err){
                 res.json({ error: err });;
             }else{
-                res.json(user);
+                res.json(team);
             }
         });
     })
@@ -171,57 +186,57 @@ router.route('/users')
 
 
         
-        Users.find(function(err, users) {
+        Teams.find(function(err, teams) {
             if (err){
                 res.json({ error: err });
             }else{
-                res.json(users);
+                res.json(teams);
             }
         });
 
     });
 
-router.route('/users/:user_id')
+router.route('/teams/:team_id')
 
     // get the review with that id
     .get(function(req, res) {
-        Users.findById(req.params.user_id, function(err, user) {
+        Teams.findById(req.params.team_id, function(err, team) {
             if (err){
                 res.json({ error: err });
             }else{
-                res.json(user);
+                res.json(team);
             }
         });
     })
-    // update the user with this id
+    // update the team with this id
     .put(function(req, res) {
-        Users.findById(req.params.user_id, function(err, user) {
+        Teams.findById(req.params.team_id, function(err, team) {
             if (err){
                 res.json({ error: err });
             }
-            _.extend(user,req.body).save(function(err,user) {
+            _.extend(team,req.body).save(function(err,team) {
                 if (err){
                     res.json({ error: err });
                 }else{
-                    res.json(user);
+                    res.json(team);
                 }
             });
 
         });
     })
-        //delete user
+        //delete team
     .delete(function(req, res) {
-        //first, get the user and see if it has any reviews
-        Users.findById(req.params.user_id, function(err, user) {
+        //first, get the team and see if it has any reviews
+        Teams.findById(req.params.team_id, function(err, team) {
             if (err){
-                res.json({ error: 'error getting user: ' +err });
+                res.json({ error: 'error getting team: ' +err });
             }else{
-                Users.remove( {_id: user._id}, 
+                Teams.remove( {_id: team._id}, 
                     function(err) {
                         if (err){
-                            res.json({ error: 'error removing lift: ' +err });
+                            res.json({ error: 'error removing team: ' +err });
                         }else{
-                            res.json({ sucess: 'removed user' });
+                            res.json({ sucess: 'removed team' });
                         }
                     }
                 );
@@ -230,6 +245,81 @@ router.route('/users/:user_id')
         });
     })
 
+// on routes that end in /leagues
+// ----------------------------------------------------
+router.route('/leagues')
+    .post(function(req, res) {
+        new Leagues(req.body).save(function(err,league) {
+            if(err){
+                res.json({ error: err });;
+            }else{
+                res.json(league);
+            }
+        });
+    })
+
+    .get(function(req, res) {
+
+
+        
+        Leagues.find(function(err, leagues) {
+            if (err){
+                res.json({ error: err });
+            }else{
+                res.json(leagues);
+            }
+        });
+
+    });
+
+router.route('/leagues/:league_id')
+
+    // get the review with that id
+    .get(function(req, res) {
+        Leagues.findById(req.params.league_id, function(err, league) {
+            if (err){
+                res.json({ error: err });
+            }else{
+                res.json(league);
+            }
+        });
+    })
+    // update the league with this id
+    .put(function(req, res) {
+        Leagues.findById(req.params.league_id, function(err, league) {
+            if (err){
+                res.json({ error: err });
+            }
+            _.extend(league,req.body).save(function(err,league) {
+                if (err){
+                    res.json({ error: err });
+                }else{
+                    res.json(league);
+                }
+            });
+
+        });
+    })
+        //delete league
+    .delete(function(req, res) {
+        //first, get the league and see if it has any reviews
+        Leagues.findById(req.params.league_id, function(err, league) {
+            if (err){
+                res.json({ error: 'error getting league: ' +err });
+            }else{
+                Leagues.remove( {_id: league._id}, 
+                    function(err) {
+                        if (err){
+                            res.json({ error: 'error removing league: ' +err });
+                        }else{
+                            res.json({ sucess: 'removed league' });
+                        }
+                    }
+                );
+                
+            }
+        });
+    })
 
 // on routes that end in /games
 // ----------------------------------------------------
