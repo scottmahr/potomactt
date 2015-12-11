@@ -1,0 +1,67 @@
+<div layout="row" flex id="content">
+
+    <md-content layout="column" flex="70" class="md-padding myContainer" >
+      
+      <md-card>
+        <md-toolbar class="myHeaderLight"  >
+                <h1 class="md-toolbar-tools  headerDark">Teams</h1>
+        </md-toolbar>
+        <md-card-content style="height:300px;overflow-y:scroll;">
+          <md-subheader >We have these Teams</md-subheader>
+          <md-list-item ng-repeat="team in s.teams | orderBy:'name' | filter:{ leagueID: s.currentLeague } ">
+            <md-checkbox ng-change="teamChecked(team._id)" ng-model="team.checked"></md-checkbox>
+            <p>{{team.name}}</p>
+            <md-icon class="md-secondary icon-edit" aria-label="edit" ng-click="doSecondaryAction($event)"></md-icon>
+          </md-list-item>
+        </md-card-content>
+      </md-card>
+
+
+      <md-card>
+        <md-toolbar class="myHeaderLight"  >
+                <h1 class="md-toolbar-tools  headerDark">Raw Data</h1>
+        </md-toolbar>
+        <md-card-content >
+            <md-subheader >Fill in stuff below</md-subheader>
+            
+            <md-list-item ng-repeat="game in s.rawGames  ">
+            <p>{{game}}</p>
+          </md-list-item>
+
+            <md-button ng-click="" class="md-raised md-primary">Convert to Games</md-button>
+        </md-card-content>
+      </md-card>
+
+
+      
+
+
+        
+    </md-content>
+
+
+
+
+
+
+
+
+    <md-content layout="column" flex="30" class="md-padding myContainer" >
+      
+      <md-card>
+        <md-toolbar class="myHeader"  >
+                <h1 class="md-toolbar-tools">NOTES</h1>
+        </md-toolbar>
+        <md-card-content>
+          <p class="notes">
+            On this page we will be able to easily add games.<br><br>
+            
+
+            </p>
+          
+        </md-card-content>
+      </md-card>
+
+        
+    </md-content>
+</div>

@@ -1,0 +1,53 @@
+<div layout="row" flex id="content">
+
+    <md-content layout="column" flex="100" class="md-padding myContainer" >
+      
+      <md-card>
+        <md-toolbar class="myHeaderLight"  >
+                <h1 class="md-toolbar-tools  headerDark">Lifts</h1>
+        </md-toolbar>
+        <md-card-content >
+            <md-subheader >We have this many lifts: {{s.lifts.length}}</md-subheader>
+            <div  style="height:300px;overflow-y:scroll;">   
+                <md-list-item ng-repeat="lift in s.lifts | orderBy:'-cTime' ">
+                    <md-checkbox ng-change="liftChecked(lift._id)" ng-model="lift.checked"></md-checkbox>
+                    <p>{{lift.cTime|dt}}({{lift.liftName}} at {{lift.weight}}lbs) - {{lift.notes}}</p>
+                    <md-icon class="md-secondary icon-edit" aria-label="edit" ng-click="logLift(lift)"></md-icon>
+                </md-list-item>
+            </div>
+        </md-card-content>
+      </md-card>
+        
+
+      <md-card>
+        <md-toolbar class="myHeaderLight"  >
+                <h1 class="md-toolbar-tools  headerDark">Lift Data</h1>
+        </md-toolbar>
+        <md-card-content >
+            <md-subheader >We have this many lifts: {{s.lifts.length}}</md-subheader>
+            
+
+            
+
+        </md-card-content>
+      </md-card>
+
+
+
+
+
+
+
+
+
+    </md-content>
+
+
+
+
+
+
+
+
+    
+</div>

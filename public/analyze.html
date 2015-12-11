@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<head ng-app="CairnCash">
+
+<!-- Define Charset -->
+<meta charset="utf-8"/>
+
+<!-- Responsive Metatag -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<!-- Page Title -->
+<title> FormLifting Admin</title>
+
+<!-- Description and Keyword -->
+<meta name="keywords" content="formlifting,lifting,olympic,crossfit"/>
+<meta name="description" content="FormLifting is a new device that gives feedback on olympic lifting and helps lifters lift smarter."/>
+
+<!-- Stylesheet and Bootstrap -->
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+
+ <link href="css/app.css" rel="stylesheet">
+
+
+
+<!-- Favicon -->
+<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
+
+ 
+
+
+</head>
+  <body >
+    <div class="row">
+      <div ng-controller="AppCtrl" class="col s2 sideBar">
+          <img class="logo" src="img/logo-345x150.png">
+          <div class="sideTxt">Main</div>
+          <div class="sideTxt">HOME</div>
+          <div class="sideTxt">COMPOSER</div>
+      </div>
+      <div ui-view class="col s10"></div>
+      
+    </div>
+    </body>
+
+<!-- Javascript Library -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.8/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+
+
+    <script src="js/libs/lodash.min.js"></script>
+    <script src="js/libs/d3.min.js"></script>  
+    <script src="js/libs/restangular.js"></script>  
+
+    <script src="js/analyze.js"></script>
+    <script src="js/common/State.js"></script>
+    <script src="js/common/Globals.js"></script>
+    <script src="js/common/EditState.js"></script>
+
+    <script src="js/directives/cashPlot.js"></script>
+    <script src="js/directives/subPlot.js"></script>
+
+
+
+    <script src="js/common/Controllers.js"></script>
+
+
+</html>

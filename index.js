@@ -102,6 +102,8 @@ var gameSchema = new mongoose.Schema({
     
 }, { versionKey: false });
 
+//gameSchema.index({ datePlayed: 1, player1: 1,player2:1 }, { unique: true });
+
 var Leagues = mongoose.model('pttLeagues', leagueSchema);
 var Teams = mongoose.model('pttTeams', teamSchema);
 var Games = mongoose.model('pttGames', gameSchema);
