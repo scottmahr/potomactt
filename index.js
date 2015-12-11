@@ -55,6 +55,9 @@ var validateEmail = function(email) {
     return re.test(email)
 };
 
+//5637aa91ef0bfb03002ed187 beach
+//5637aac1ef0bfb03002ed188  ping pong
+
 
 var leagueSchema = new mongoose.Schema({
     cDate: { type: Date, default: Date.now },   //date item was created
@@ -143,7 +146,7 @@ router.get('/image', function(req, res) {
     console.log("yep:"+req.query.id)
     if(!!req.query.id){
         var readstream = gfs.createReadStream({
-         _id: req.query.id
+            _id: req.query.id
         });
 
         readstream.on('error', function (err) {
