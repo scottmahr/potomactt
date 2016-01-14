@@ -50,8 +50,8 @@
               <p ng-show="game.cPlayer==1">{{s.getPlayerName(game.player1)+' ('+game.scores[game.scores.length-1][0]+')'|titlecase}} - 
                   <b>{{s.getPlayerName(game.player2)+' ('+game.scores[game.scores.length-1][1]+')'|titlecase}}</b></p> 
 
-              <p>
-                  Date: {{game.datePlayed|dt}}<br>
+              <p> 
+                  Date: {{game.datePlayed|dt}} &nbsp;&nbsp;&nbsp;
                   Rating Change: <span ng-class="{'green':game.ratingChange[game.cPlayer]>0,'red':game.ratingChange[game.cPlayer]<0}">{{game.ratingChange[game.cPlayer]|int}}</span>
               </p>
             </span>

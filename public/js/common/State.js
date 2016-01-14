@@ -66,7 +66,7 @@ app.factory('State', ['$state','$timeout','Globals',
         rawGames:[],
 
         currentGame: undefined,
-        currentLeague: '5637aa91ef0bfb03002ed187',  //this is the ID of the current league
+        currentLeague: '5637aac1ef0bfb03002ed188',  //this is the ID of the current league
 
         currentPlayerID:'',
 
@@ -188,6 +188,13 @@ app.factory('State', ['$state','$timeout','Globals',
             var x,opp,score,opponent;
 
             _.each(service.games,function(g){
+
+
+                var mult = 1;
+                if(new Date(g.datePlayed) < new Date('2015-2-15')){
+                    mult = .1;
+                }
+
               score = g.scores[g.scores.length-1];
 
               if(!_.has(g,'ratingChange')){g.ratingChange=[0,0];}
@@ -210,16 +217,16 @@ app.factory('State', ['$state','$timeout','Globals',
 
                 //now do the rating change
                 if(g.player1==team._id){
-                  g.ratingChange[0] = rating-service.getRating(team._id);
+                  g.ratingChange[0] = (rating-service.getRating(team._id))*mult;
                 }else{
-                  g.ratingChange[1] = rating-service.getRating(team._id);
+                  g.ratingChange[1] = (rating-service.getRating(team._id))*mult;
                 }
               }
 
 
 
               if(x!=undefined){
-                scores.push(rating);
+                scores.push([rating,mult]);
 
                 if(bestGame.length==0 || rating>bestGame[0]){
                   //new best win
@@ -236,7 +243,7 @@ app.factory('State', ['$state','$timeout','Globals',
           });
 
         //console.log(team.name+':'+JSON.stringify(scores));
-        var newScore = Globals.myAverage(scores).mean;
+        var newScore = service.avgScores(scores);
         if(scores.length==0){newScore=1000;}
         return {'_id':team._id,'rating':newScore,'bestGame':bestGame,'worstGame':worstGame}
       });
@@ -255,6 +262,16 @@ app.factory('State', ['$state','$timeout','Globals',
     }
 
 
+    service.avgScores = function(scores){
+        //scores is [score,mult]
+
+        var total = _.sum(_.map(scores,function(s){
+            return s[0]*s[1];
+        }));
+        var count = _.sum(_.pluck(scores,1));
+        //console.log(scores.length,total,count)
+        return total/count;
+    }
 
     service.calcSeason = function(){
         console.log('starting calc')
@@ -276,6 +293,15 @@ app.factory('State', ['$state','$timeout','Globals',
         var score,opponent;
 
         _.each(service.games,function(g){
+
+            //here is where we can filter which games to use
+
+            if(new Date(g.datePlayed) < new Date('2015-2-15')){
+               
+                
+            }
+
+
           score = g.scores[g.scores.length-1];
           
 
@@ -317,36 +343,40 @@ app.factory('State', ['$state','$timeout','Globals',
 
 
     service.loadGames = function(){
-        _.each(Globals.games,function(g,idx){
-            //now we look at each game in the day
-         
-            //console.log(parseInt(idx*90/25),tomorrow)
 
-           
-            var game = {
-                datePlayed:  new Date(g[6]), 
-                leagueID:  '5637aa91ef0bfb03002ed187',
-                player1: service.getPlayerID(g[0]), 
-                player2: service.getPlayerID(g[1]),
-                scores: fakeScoreline([g[2], g[3]]),  //scores [[0,1],[1,2],[2,2],[0,0],[1,1],[2,3]]
-                properties: { game:g[5] }, //who served first, anything like that 
-                location: g[4]
-            };
+        var dt;
+        var count = 0;
+        _.each(Globals.newGames,function(day){
+            //look at each day
+            dt = new Date(day[0]);
+            _.each(day[1],function(g,idx){
+                //now we look at each game in the day
+                console.log(dt,idx)
+                //console.log(parseInt(idx*90/25),tomorrow)
+
+               count ++;
+                var game = {
+                    datePlayed:  dt, 
+                    leagueID:  '5637aac1ef0bfb03002ed188',
+                    player1: service.getPlayerID(g[0]), 
+                    player2: service.getPlayerID(g[1]),
+                    scores: [ [g[2], g[3]] ]  ,  
+                };
 
 
-            service.games.push(game);
+                $timeout(function(){
+                    Games.createGame(game);
+                },500*count)
 
 
 
-            //console.log(g[0]+','+g[1]+','+g[2]+','+g[3]+','+g[0])
-            
+                //console.log(g[0]+','+g[1]+','+g[2]+','+g[3]+','+g[0])
+                
+            });        
         });
 
-        console.log(service.games)
-
-
+      
     }
-
 
 
 

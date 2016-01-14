@@ -1,7 +1,7 @@
 var app = angular.module("twc");
 
-app.controller('EditorCtrl', ['$scope','$timeout','$mdDialog','State','Games', 
-      function($scope,$timeout,$mdDialog,State,Games){
+app.controller('EditorCtrl', ['$scope','$timeout','$mdDialog','State','Games','Globals', 
+      function($scope,$timeout,$mdDialog,State,Games,Globals){
     $scope.s = State;
     $scope.m = {
         rawData:'',
@@ -9,6 +9,7 @@ app.controller('EditorCtrl', ['$scope','$timeout','$mdDialog','State','Games',
  
     
     $scope.convertRaw = function(){
+        return;
         console.log($scope.m.rawData)
 
         _.each(gamesData,function(g,idx){
@@ -27,6 +28,43 @@ app.controller('EditorCtrl', ['$scope','$timeout','$mdDialog','State','Games',
             },500*idx)
 
         })
+    }
+
+    $scope.loadGames = function(){
+        return;
+
+        var dt;
+        var count = 0;
+        _.each(Globals.newGames,function(day){
+            //look at each day
+            dt = new Date(day[0]);
+            _.each(day[1],function(g,idx){
+                //now we look at each game in the day
+                //console.log(dt,idx)
+                //console.log(parseInt(idx*90/25),tomorrow)
+
+               count ++;
+                var game = {
+                    datePlayed:  dt, 
+                    leagueID:  '5637aac1ef0bfb03002ed188',
+                    player1: State.getPlayerID(g[0]), 
+                    player2: State.getPlayerID(g[1]),
+                    scores: [ [g[2], g[3]] ]  ,  
+                };
+
+
+                $timeout(function(){
+                    Games.createGame(game);
+                },500*count)
+
+
+
+                //console.log(g[0]+','+g[1]+','+g[2]+','+g[3]+','+g[0])
+                
+            });        
+        });
+
+      
     }
 
 }]);
