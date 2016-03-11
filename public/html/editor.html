@@ -23,12 +23,31 @@
         </md-toolbar>
         <md-card-content >
             <md-subheader >Fill in stuff below</md-subheader>
+          <md-input-container style="display:inline-block;">
+                  <label>Date</label>
+                  <input ng-model="m.dateStr">
+          </md-input-container>
+          <md-input-container style="display:inline-block;">
+            <md-select ng-model="m.leagueID" placeholder="Select a League">
+              <md-option ng-value="opt[0]" ng-repeat="opt in m.leagues">{{ opt[1] }}</md-option>
+            </md-select>
+          </md-input-container>
+          <md-input-container class="md-block">
+            <label>Raw Data</label>
+            <textarea ng-model="m.rawData" md-maxlength="3000" rows="10" md-select-on-focus></textarea>
+          </md-input-container>
+
+            <md-button ng-click="convertGames()" class="md-raised md-primary">Convert to Games</md-button>
             
-            <md-list-item ng-repeat="game in s.rawGames  ">
-            <p>{{game}}</p>
+
+            <md-subheader >Here are the games we found, there were {{m.rawGames.length}} of them.</md-subheader>
+            
+            <md-list-item ng-repeat="game in m.rawGames  ">
+            <p>{{s.getPlayerName(game.player1)}} vs. {{s.getPlayerName(game.player2)}}, Score: {{game.scores[0]}}</p>
           </md-list-item>
 
-            <md-button ng-click="loadGames()" class="md-raised md-primary">Convert to Games</md-button>
+          <md-button ng-click="loadGames()" class="md-raised md-primary">Load Games To Cloud</md-button>
+
         </md-card-content>
       </md-card>
 

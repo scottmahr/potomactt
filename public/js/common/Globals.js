@@ -188,7 +188,7 @@ app.factory('Globals', [function() {
     ]
 
 
-service.newGames = [
+service.newGamealsoOld = [
 
 
         ['2015-11-2',[

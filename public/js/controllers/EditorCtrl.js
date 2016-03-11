@@ -5,9 +5,76 @@ app.controller('EditorCtrl', ['$scope','$timeout','$mdDialog','State','Games','G
     $scope.s = State;
     $scope.m = {
         rawData:'',
+
+        dateStr: '2016-2-4', //'yyyy-mm-dd',
+        leagueID : '5637aac1ef0bfb03002ed188',
+        leagues: [['5637aac1ef0bfb03002ed188','Potomac PP'],['5637aa91ef0bfb03002ed187','Beach League 2015']],
+        rawGames : [],
     }
  
     
+    $scope.convertGames = function(){
+        var dt = new Date($scope.m.dateStr);
+        if ( _.isNaN( dt.getTime() ) ) {  // d.valueOf() could also work
+            confirm('You need to enter a date in the form yyyy-mm-dd')
+            return;
+        }
+        else {
+            console.log('date is valid')
+        }
+        if($scope.m.leagueID==''){
+            confirm('You need to select a league')
+            return;
+        }
+        
+        if($scope.m.dateStr)
+        
+        console.log($scope.m.rawData)
+        var rawData = "["+$scope.m.rawData.replace(/'/g,'"')+"]";
+        console.log(rawData)
+
+        try {
+            var realData = JSON.parse(rawData)
+        }
+        catch(err) {
+            confirm("there was an error parsing the data: "+err)
+            return;
+        }
+
+        
+        console.log(realData)
+        
+
+        _.each(realData,function(g,idx){
+            var game = {
+                datePlayed:  dt, 
+                leagueID:  $scope.m.leagueID,
+                player1: State.getPlayerID(g[0]), 
+                player2: State.getPlayerID(g[1]),
+                scores: [ [g[2], g[3]] ],  //scores [[0,1],[1,2],[2,2],[0,0],[1,1],[2,3]]
+            };
+            $scope.m.rawGames.push(game)
+        })
+    }
+
+
+    $scope.loadGames = function(){
+        _.each($scope.m.rawGames,function(g,idx){
+            $timeout(function(){
+                Games.createGame(g);
+            },500*idx)
+        });
+        //then after that is done, announce it
+        $timeout(function(){
+            confirm('We have uploaded '+$scope.m.rawGames.length+' games.')
+            $scope.m.rawGames = [];
+        },500*$scope.m.rawGames.length+3000)
+
+    }
+
+
+
+
     $scope.convertRaw = function(){
         return;
         console.log($scope.m.rawData)
@@ -30,7 +97,7 @@ app.controller('EditorCtrl', ['$scope','$timeout','$mdDialog','State','Games','G
         })
     }
 
-    $scope.loadGames = function(){
+    $scope.loadGamesOld = function(){
         return;
 
         var dt;
